@@ -3,75 +3,27 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!--    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">-->
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <!--    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">-->
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="stylesheet" href="./libs/style.add.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=7,IE=9">
+    <meta http-equiv="X-UA-Compatible" content="IE=7,9">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" href="./libs/style.add.css" type="text/css">
 
     <script src="./libs/jquery.min.js"></script>
-
+    <title>优惠券</title>
 </head>
-<style>
-    #container {
-        width: 100%;
-        height: 100%;
-        background-color: #EDE6DC;
-    }
-
-    .icon-divv {
-        width: 100%;
-        height: 19rem;
-    }
-
-    .icon-divv > img {
-        width: 100%;
-        height: 19rem;
-    }
-
-    #container {
-        padding: 0;
-        margin: 0;
-    }
-
-    .icon-p {
-        width: 100%;
-        height: 5rem;
-        color: #CDB382;
-        line-height: 5rem;
-        text-align: center;
-        background-color: #EDE6DC;
-    }
-
-    .icon-p > span {
-        border-bottom: 1px solid #CDB382;
-    }
-
-    .icon-pp {
-        width: 100%;
-        margin-top: 2.5rem;
-        text-align: center;
-        font-size: 0.8rem;
-        margin-top: 5rem;
-    }
-
-    #keyboardBox {
-        position: fixed;
-        bottom: 0;
-    }
-
-    .foot {
-        width: 100%;
-        height: 150px;
-        background-color: red;
-    }
-</style>
 <body>
 <div id="container">
     <div class="icon-divv">
-        <img src="./libs/01.png" alt="">
+        <img  id="useHead" alt="">
     </div>
-    <p class="icon-p"><span>奖励明细</span></p>
+    <p class="icon-p"><span>请使用优惠券</span></p>
     <div id="carLicenseBox">
         <div class="carLicenseTitle">
             请输入车牌号
@@ -89,13 +41,15 @@
             </ul>
         </div>
         <button class="submitBtn" id="submitBtn">提交</button>
-        <p class="icon-pp">本活动最终解释权归商家所有</p>
         <div class="foot" style="display: none;"></div>
     </div>
-    <div class="img-jpg">
-        <!-- <img src="img/pig.jpg"> -->
-    </div>
+    <!--    <div class="img-jpg">-->
+    <!--        &lt;!&ndash; <img src="img/pig.jpg"> &ndash;&gt;-->
+    <!--    </div>-->
     <!--键盘-->
+    <div class="icon-divv">
+        <img  id="useFoot" alt="">
+    </div>
     <div id="keyboardBox">
         <div class="provienceBox" id="provienceBox">
             <div class="close">
@@ -202,12 +156,13 @@
         </div>
     </div>
 </div>
+</body>
 <script>
+    $("#useHead").attr("src","http://47.103.155.55:8080/yhq-static/01.png");
+    $("#useFoot").attr("src","http://47.103.155.55:8080/yhq-static/02.jpg");
     let starttime = "";// 开始时间
     let endtime = "";   // 结束时间
     let dataTimeNUmber = "";  //现在的时间
-
-
     function add() {
         var id = getQueryVariable('id');
         var prarm = {
@@ -239,7 +194,7 @@
         });
     }
 
-    // add();
+    add();
     if (localStorage.getItem('employ-coupon')) {
         var str = localStorage.getItem('employ-coupon')
         $(".carLicenseMain").children('ul').children("li:eq(0)").text(str.substr(0, 1))
@@ -275,7 +230,7 @@
         $("#keyboardBox").hide();
         $(".carLicenseMain").on("click", function () {
             $("#keyboardBox").show();
-            $(".foot").show()
+            // $(".foot").show()
             $("body,html").animate({scrollTop: 300}, 500);
 
         });
@@ -292,7 +247,7 @@
         //键盘点击动画
         $(".textBox ul li").each(function () {
             $(this).click(function () {
-                $(this).addClass("activeKey") //添加动画效果
+                $(this).addClass("activeKey"); //添加动画效果
                 $(this).siblings().removeClass("activeKey") //移除动画效果
                 var interval = setTimeout(function () { //定时器及时清除自身动画效果
                     $(this).removeClass("activeKey")
@@ -434,11 +389,13 @@
                     "type": Number(type)
                 },
                 success: function (data) {
-                    alert(data.msg)
+                    alert(data.msg);
+                    window.location.href = './result.html?carNum=' + carNum;
 
                 },
                 error: function (data) {
-                    alert("系统异常")
+                    // alert("系统异常")
+                    window.location.href='./result.html?carNum=' + carNum;
                 },
             });
 
@@ -458,6 +415,4 @@
         return false;
     }
 </script>
-</body>
-
 </html>
