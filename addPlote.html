@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<!--    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">-->
+    <!--    <meta name="viewport" content="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">-->
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
     <!--    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">-->
     <meta name="format-detection" content="telephone=no">
@@ -21,7 +21,7 @@
 <body>
 <div id="container">
     <div class="icon-divv">
-        <img  id="useHead" alt="">
+        <img id="useHead" alt="">
     </div>
     <p class="icon-p"><span>请使用优惠券</span></p>
     <div id="carLicenseBox">
@@ -48,7 +48,7 @@
     <!--    </div>-->
     <!--键盘-->
     <div class="icon-divv">
-        <img  id="useFoot" alt="">
+        <img id="useFoot" alt="">
     </div>
     <div id="keyboardBox">
         <div class="provienceBox" id="provienceBox">
@@ -158,8 +158,9 @@
 </div>
 </body>
 <script>
-    $("#useHead").attr("src","http://47.103.155.55:8080/yhq-static/01.png");
-    $("#useFoot").attr("src","http://47.103.155.55:8080/yhq-static/02.jpg");
+    $("#useHead").attr("src", "http://47.103.155.55:8080/yhq-static/01.png");
+    $("#useFoot").attr("src", "http://47.103.155.55:8080/yhq-static/02.jpg");
+    let msg = "";
     let starttime = "";// 开始时间
     let endtime = "";   // 结束时间
     let dataTimeNUmber = "";  //现在的时间
@@ -259,7 +260,7 @@
         //切换键盘
         $('.changeContentBtn').click(function () {
             $('li').siblings().removeClass("activeKey")
-            if ($(this).html() == 'ABC') {
+            if ($(this).html() === 'ABC') {
                 $('#textBox').show();
                 $('#provienceBox').hide();
             } else {
@@ -375,11 +376,8 @@
             localStorage.setItem('employ-coupon', carNum);
             var id = getQueryVariable('id');
             var type = getQueryVariable('type');
-            //----------------------------------------------------------------------------------------------------------------------
             $.ajax({
                 url: "http://47.103.155.55:8080/yhq-war/couponOrderManager/insertCouponOrder",
-                // url: "http://101.132.105.124:8081/carManagerAid-test/JinshiCouponOrder/insertCouponOrder",
-                // url: "JinshiCouponGenerate/selectGenerateById/JinshiCouponOrder/insertCouponOrder",
                 contentType: "charset=UTF-8",
                 dataType: "json",
                 type: "get",
@@ -389,13 +387,15 @@
                     "type": Number(type)
                 },
                 success: function (data) {
-                    alert(data.msg);
-                    window.location.href = './result.html?carNum=' + carNum;
-
+                    if (data.msg === '使用优惠券成功') {
+                        window.location.href = './success.html?carNum=' + encodeURIComponent(carNum) + '&type=' + type + '&id=' + id;
+                    } else {
+                        window.location.href = './error.html?carNum=' + encodeURIComponent(carNum) + '&type=' + type + '&id=' + id + '&msg=' + encodeURIComponent(data.msg);
+                    }
                 },
                 error: function (data) {
-                    // alert("系统异常")
-                    window.location.href='./result.html?carNum=' + carNum;
+                    msg = "扫码失败，请联系工作人员更换二维码";
+                    window.location.href = './error.html?carNum=' + encodeURIComponent(carNum) + '&type=' + type + '&id=' + id + '&msg=' + encodeURIComponent(msg);
                 },
             });
 
@@ -404,7 +404,6 @@
 
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
-        // var query = 'http://www.runoob.com/index.php?id=1&image=awesome.jpg'
         var vars = query.split("&");
         for (var i = 0; i < vars.length; i++) {
             var pair = vars[i].split("=");
