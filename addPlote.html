@@ -158,8 +158,8 @@
 </div>
 </body>
 <script>
-    $("#useHead").attr("src", "http://47.103.155.55:8080/yhq-static/01.png");
-    $("#useFoot").attr("src", "http://47.103.155.55:8080/yhq-static/02.jpg");
+    $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-first1.jpg");
+    $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-first2.jpg");
     let msg = "";
     let starttime = "";// 开始时间
     let endtime = "";   // 结束时间
@@ -174,7 +174,7 @@
         var datetime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
         var dataTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ';
         $.ajax({
-            url: "http://47.103.155.55:8080/yhq-war/shopCouponManager/selectParkCouponById",
+            url: "http://api.jinshipark.com/yhq-war/shopCouponManager/selectParkCouponById",
             contentType: "application/json",
             dataType: "json",
             type: "POST",
@@ -377,7 +377,7 @@
             var id = getQueryVariable('id');
             var type = getQueryVariable('type');
             $.ajax({
-                url: "http://47.103.155.55:8080/yhq-war/couponOrderManager/insertCouponOrder",
+                url: "http://api.jinshipark.com/yhq-war/couponOrderManager/insertCouponOrder",
                 contentType: "charset=UTF-8",
                 dataType: "json",
                 type: "get",

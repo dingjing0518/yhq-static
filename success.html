@@ -40,8 +40,8 @@
     </div>
 </div>
 <script>
-    $("#useHead").attr("src", "http://47.103.155.55:8080/yhq-static/01.png");
-    $("#useFoot").attr("src", "http://47.103.155.55:8080/yhq-static/02.jpg");
+    $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-success1.jpg");
+    $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-success2.jpg");
     let starttime = "";// 开始时间
     let endtime = "";   // 结束时间
     let dataTimeNUmber = new Date();  //现在的时间
@@ -54,7 +54,7 @@
             "id": Number(id),
         };
         $.ajax({
-            url: "http://47.103.155.55:8080/yhq-war/shopCouponManager/selectParkCouponById",
+            url: "http://api.jinshipark.com/yhq-war/shopCouponManager/selectParkCouponById",
             contentType: "application/json",
             dataType: "json",
             type: "POST",
