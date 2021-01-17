@@ -22,12 +22,12 @@ ol {
 }
 .icon-divv {
     width: 100%;
-    height: 12rem;
+    height: 10rem;
 }
 
-.icon-divv > img {
+.icon-divv > a > img {
     width: 100%;
-    height: 12rem;
+    height: 10rem;
 }
 .icon-pp {
     width: 100%;

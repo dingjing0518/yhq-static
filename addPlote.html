@@ -21,7 +21,9 @@
 <body>
 <div id="container">
     <div class="icon-divv">
-        <img id="useHead" alt="">
+        <a id="headA">
+            <img id="useHead" onerror="this.src='http://syq.jinshipark.com/images/yhq-first1.jpg'">
+        </a>
     </div>
     <p class="icon-p"><span>请使用优惠券</span></p>
     <div id="carLicenseBox">
@@ -48,7 +50,9 @@
     <!--    </div>-->
     <!--键盘-->
     <div class="icon-divv">
-        <img id="useFoot" alt="">
+        <a id="footA">
+            <img id="useFoot" onerror="this.src='http://syq.jinshipark.com/images/yhq-first2.jpg'">
+        </a>
     </div>
     <div id="keyboardBox">
         <div class="provienceBox" id="provienceBox">
@@ -158,21 +162,17 @@
 </div>
 </body>
 <script>
-    $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-first1.jpg");
-    $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-first2.jpg");
+    // $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-first1.jpg");
+    // $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-first2.jpg");
     let msg = "";
-    let starttime = "";// 开始时间
-    let endtime = "";   // 结束时间
     let dataTimeNUmber = "";  //现在的时间
+    let parkId = '';
+    add();
     function add() {
         var id = getQueryVariable('id');
         var prarm = {
             "id": Number(id),
         };
-        var d = new Date();
-        dataTimeNUmber = d.getTime();
-        var datetime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
-        var dataTime = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ';
         $.ajax({
             url: "http://api.jinshipark.com/yhq-war/shopCouponManager/selectParkCouponById",
             contentType: "application/json",
@@ -180,22 +180,59 @@
             type: "POST",
             data: JSON.stringify(prarm),
             success: function (data) {
-                console.log(data);
-                console.log(data.data.data.endtime);
-                data.data.data.endtime = dataTime + data.data.data.endtime;
-                data.data.data.starttime = dataTime + data.data.data.starttime;
-                starttime = (new Date(data.data.data.starttime).getTime());
-                endtime = (new Date(data.data.data.endtime).getTime());
-                console.log(starttime);
-                console.log(endtime);
+                if (data.data.status === 200) {
+                    parkId = data.data.data.parkid;
+                    if (parkId === "false" || parkId === '' || parkId === undefined) {
+                        $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-first1.jpg");
+                        $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-first2.jpg");
+                    } else {
+                        getImages();
+                    }
+                }
             },
             error: function (data) {
                 alert(data)
             },
         });
     }
-
-    add();
+    function getImages() {
+        params = {
+            parkId: parkId,
+            type: "YHQ-First"
+        };
+        $.ajax({
+            url: "http://hfzf.jinshipark.com/hfzf-api/jinshiparkAdvertImage/getJinshiparkAdvertImageByTypeAndArea",
+            // url: "http://localhost:8090/jinshiparkAdvertImage/getJinshiparkAdvertImageByTypeAndArea",
+            contentType: "application/json",
+            dataType: "json",
+            type: "POST",
+            data: JSON.stringify(params),
+            success: function (res) {
+                if (res.status === 200) {
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].address === "yhq-FirstUp") {
+                            if (res.data[i].imagepath != null) {
+                                $("#useHead").attr("src", res.data[i].imagepath);
+                            }
+                            if (res.data[i].weblink != null) {
+                                document.getElementById("headA").href = res.data[i].weblink;
+                            }
+                        } else if (res.data[i].address === "yhq-FirstDown") {
+                            if (res.data[i].imagepath != null) {
+                                $("#useFoot").attr("src", res.data[i].imagepath);
+                            }
+                            if (res.data[i].weblink != null) {
+                                document.getElementById("footA").href = res.data[i].weblink;
+                            }
+                        }
+                    }
+                }
+            },
+            err: function (res) {
+                console.log(res)
+            }
+        });
+    }
     if (localStorage.getItem('employ-coupon')) {
         var str = localStorage.getItem('employ-coupon')
         $(".carLicenseMain").children('ul').children("li:eq(0)").text(str.substr(0, 1))
@@ -290,7 +327,6 @@
                     }
                 });
                 localStorage.removeItem('employ-coupon');
-                console.log(index);
                 return index
             } else {
                 var index = 0;
