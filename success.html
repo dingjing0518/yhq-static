@@ -19,7 +19,9 @@
 <body>
 <div id="container">
     <div class="icon-divv">
-        <img id="useHead" alt="">
+        <a id="headA">
+            <img id="useHead" onerror="this.src='http://syq.jinshipark.com/images/yhq-success1.jpg'">
+        </a>
     </div>
     <div id="success-content">
         <div class="success-img">
@@ -36,17 +38,20 @@
         </div>
     </div>
     <div class="icon-divv">
-        <img id="useFoot" alt="">
+        <a id="footA">
+            <img id="useFoot" onerror="this.src='http://syq.jinshipark.com/images/yhq-success2.jpg'">
+        </a>
     </div>
 </div>
 <script>
-    $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-success1.jpg");
-    $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-success2.jpg");
+    // $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-success1.jpg");
+    // $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-success2.jpg");
     let starttime = "";// 开始时间
     let endtime = "";   // 结束时间
     let dataTimeNUmber = new Date();  //现在的时间
     let fmt="YYYY-mm-dd HH:MM";
     let type = getQueryVariable('type');
+    let parkId = '';
     function add() {
         var id = getQueryVariable('id');
         var carNum = decodeURIComponent(getQueryVariable('carNum'));
@@ -61,6 +66,13 @@
             data: JSON.stringify(prarm),
             success: function (data) {
                 if (data.data.status === 200) {
+                    parkId = data.data.data.parkid;
+                    if (parkId === "false" || parkId === '' || parkId === undefined) {
+                        $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-success1.jpg");
+                        $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-success2.jpg");
+                    } else {
+                        getImages();
+                    }
                     if (type === 0) {
                         $("#success_info").append(" " +
                             "            <p>车牌号：<span>" + carNum +"</span></p>\n" +
@@ -114,6 +126,44 @@
             }
         }
         return false;
+    }
+    function getImages() {
+        params = {
+            parkId: parkId,
+            type: "YHQ-Success"
+        };
+        $.ajax({
+            url: "http://hfzf.jinshipark.com/hfzf-api/jinshiparkAdvertImage/getJinshiparkAdvertImageByTypeAndArea",
+            // url: "http://localhost:8090/jinshiparkAdvertImage/getJinshiparkAdvertImageByTypeAndArea",
+            contentType: "application/json",
+            dataType: "json",
+            type: "POST",
+            data: JSON.stringify(params),
+            success: function (res) {
+                if (res.status === 200) {
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].address === "yhq-SuccessUp") {
+                            if (res.data[i].imagepath != null) {
+                                $("#useHead").attr("src", res.data[i].imagepath);
+                            }
+                            if (res.data[i].weblink != null) {
+                                document.getElementById("headA").href = res.data[i].weblink;
+                            }
+                        } else if (res.data[i].address === "yhq-SuccessDown") {
+                            if (res.data[i].imagepath != null) {
+                                $("#useFoot").attr("src", res.data[i].imagepath);
+                            }
+                            if (res.data[i].weblink != null) {
+                                document.getElementById("footA").href = res.data[i].weblink;
+                            }
+                        }
+                    }
+                }
+            },
+            err: function (res) {
+                console.log(res)
+            }
+        });
     }
     function dateFormat(fmt, date) {
         let ret;
