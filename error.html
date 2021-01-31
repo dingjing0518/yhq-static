@@ -115,7 +115,7 @@
         });
     }
 
-    if (msg === "扫码失败，请联系工作人员更换二维码") {
+    if (msg === "扫码失败，请联系工作人员更换二维码" || msg === "系统异常") {
         $("#useHead").attr("src", "http://syq.jinshipark.com/images/yhq-error1.jpg");
         $("#useFoot").attr("src", "http://syq.jinshipark.com/images/yhq-error2.jpg");
         $(".error-img").append(" <p class=\"error-pp\"><span>" + msg + "</span></p>");

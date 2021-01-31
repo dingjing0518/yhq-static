@@ -167,6 +167,7 @@
     let msg = "";
     let parkId = '';
     add();
+
     function add() {
         var id = getQueryVariable('id');
         var prarm = {
@@ -194,6 +195,7 @@
             },
         });
     }
+
     function getImages() {
         params = {
             parkId: parkId,
@@ -232,6 +234,7 @@
             }
         });
     }
+
     if (localStorage.getItem('employ-coupon')) {
         var str = localStorage.getItem('employ-coupon')
         $(".carLicenseMain").children('ul').children("li:eq(0)").text(str.substr(0, 1))
@@ -394,6 +397,23 @@
         });
         //提交按钮点击事件
         $('#submitBtn').click(function () {
+            let countdown = 10;
+            setTime(countdown);
+
+            function setTime(countdown) {
+                if (countdown === 0) {
+                    document.getElementById('submitBtn').removeAttribute("disabled");
+                    document.getElementById('submitBtn').innerHTML = "提交";
+                } else {
+                    document.getElementById('submitBtn').setAttribute("disabled", true);
+                    document.getElementById('submitBtn').innerHTML = "提交中(" + countdown + ")";
+                    countdown--;
+                    setTimeout(function () {
+                        setTime(countdown);
+                    }, 1000)
+                }
+            }
+
             var carNum = "";
             var flag = true;
             $(".carLicenseMain ul li").each(function (index) {
@@ -413,6 +433,7 @@
             var type = getQueryVariable('type');
             $.ajax({
                 url: "http://api.jinshipark.com/yhq-war/couponOrderManager/insertCouponOrder",
+                // url: "http://localhost:8080/couponOrderManager/insertCouponOrder",
                 contentType: "charset=UTF-8",
                 dataType: "json",
                 type: "get",
@@ -429,7 +450,7 @@
                     }
                 },
                 error: function (data) {
-                    msg = "扫码失败，请联系工作人员更换二维码";
+                    msg = "系统异常";
                     window.location.href = './error.html?carNum=' + encodeURIComponent(carNum) + '&type=' + type + '&id=' + id + '&msg=' + encodeURIComponent(msg);
                 },
             });
