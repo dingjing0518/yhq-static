@@ -433,12 +433,15 @@
             let type = getQueryVariable('type');
             let orderId = getQueryVariable('orderId');
             let number = getQueryVariable('num');
-            if (orderId == false) {
+            if (orderId == false || orderId == '') {
                 orderId = null;
             }
-            if (number == false) {
+            if (number == false || number == '') {
                 number = null;
+            } else {
+                number = Number(number);
             }
+
             $.ajax({
                 // url: "http://api.jinshipark.com/yhq-war/couponOrderManager/insertCouponOrder",
                 url: "http://localhost:8080/couponOrderManager/insertCouponOrder",
