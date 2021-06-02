@@ -429,18 +429,28 @@
                 return;
             }
             localStorage.setItem('employ-coupon', carNum);
-            var id = getQueryVariable('id');
-            var type = getQueryVariable('type');
+            let id = getQueryVariable('id');
+            let type = getQueryVariable('type');
+            let orderId = getQueryVariable('orderId');
+            let number = getQueryVariable('num');
+            if (orderId == false) {
+                orderId = null;
+            }
+            if (number == false) {
+                number = null;
+            }
             $.ajax({
-                url: "http://api.jinshipark.com/yhq-war/couponOrderManager/insertCouponOrder",
-                // url: "http://localhost:8080/couponOrderManager/insertCouponOrder",
+                // url: "http://api.jinshipark.com/yhq-war/couponOrderManager/insertCouponOrder",
+                url: "http://localhost:8080/couponOrderManager/insertCouponOrder",
                 contentType: "charset=UTF-8",
                 dataType: "json",
                 type: "get",
                 data: {
                     "plate": String(carNum),
                     "id": Number(id),
-                    "type": Number(type)
+                    "type": Number(type),
+                    "orderId": orderId,
+                    "num": number
                 },
                 success: function (data) {
                     if (data.msg === '使用优惠券成功') {
